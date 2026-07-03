@@ -32,7 +32,13 @@ class TemplateContractTests(unittest.TestCase):
         files = {
             "frontend/package.json": ("vite", "typescript", "zod", "@biomejs/biome"),
             "backend/pyproject.toml": ("robyn", "pydantic", "karva"),
-            "mise.toml": ("aube", "uv", "hk", "[tasks.ci]"),
+            "mise.toml": (
+                "aube",
+                "uv",
+                "hk",
+                "[tasks.ci]",
+                "python -m robyn src/app/main.py --dev",
+            ),
             "hk.pkl": ("pre-commit", "pre-push", "mise"),
             ".github/workflows/ci.yml": ("jdx/mise-action", "mise run ci"),
         }

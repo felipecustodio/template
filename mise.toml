@@ -33,7 +33,7 @@ run = "aube run dev"
 [tasks."dev:backend"]
 description = "Run Robyn development server"
 dir = "backend"
-run = "uv run python -m app.main --dev"
+run = "uv run python -m robyn src/app/main.py --dev"
 
 [tasks.dev]
 description = "Run frontend and backend development servers"
