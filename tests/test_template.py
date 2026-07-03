@@ -65,6 +65,25 @@ class TemplateContractTests(unittest.TestCase):
         ):
             self.assertIn(term, content)
 
+    def test_readme_documents_template_workflow(self) -> None:
+        content = (ROOT / "README.md").read_text()
+
+        for term in (
+            "## Prerequisite",
+            "## Setup",
+            "## Development",
+            "## Tasks",
+            "## Repository structure",
+            "## Git hooks",
+            "## Continuous integration",
+            "## Using this template",
+            "mise run install",
+            "hk install --mise",
+            "aube-lock.yaml",
+            "uv.lock",
+        ):
+            self.assertIn(term, content)
+
 
 if __name__ == "__main__":
     unittest.main()
