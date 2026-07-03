@@ -1,0 +1,115 @@
+min_version = "2026.6.10"
+
+[tools]
+aube = "1.25.2"
+hk = "1.49.0"
+node = "26.4.0"
+python = "3.14.6"
+uv = "0.11.26"
+
+[settings]
+lockfile = true
+experimental = true
+
+[tasks."install:frontend"]
+description = "Install locked frontend dependencies"
+dir = "frontend"
+run = "aube ci"
+
+[tasks."install:backend"]
+description = "Sync locked backend dependencies"
+dir = "backend"
+run = "uv sync --locked --all-groups"
+
+[tasks.install]
+description = "Install all locked dependencies"
+depends = ["install:frontend", "install:backend"]
+
+[tasks."dev:frontend"]
+description = "Run Vite development server"
+dir = "frontend"
+run = "aube run dev"
+
+[tasks."dev:backend"]
+description = "Run Robyn development server"
+dir = "backend"
+run = "uv run python -m app.main --dev"
+
+[tasks.dev]
+description = "Run frontend and backend development servers"
+depends = ["dev:frontend", "dev:backend"]
+
+[tasks."format:frontend"]
+description = "Format frontend sources"
+dir = "frontend"
+run = "aube run format"
+
+[tasks.format]
+description = "Format repository sources"
+depends = ["format:frontend"]
+
+[tasks."format:check"]
+description = "Check repository formatting"
+dir = "frontend"
+depends = ["install:frontend"]
+run = "aube run format:check"
+
+[tasks."lint:frontend"]
+description = "Lint frontend sources"
+dir = "frontend"
+depends = ["install:frontend"]
+run = "aube run lint"
+
+[tasks.lint]
+description = "Lint repository sources"
+depends = ["lint:frontend"]
+
+[tasks."typecheck:frontend"]
+description = "Type-check frontend sources"
+dir = "frontend"
+depends = ["install:frontend"]
+run = "aube run typecheck"
+
+[tasks."typecheck:backend"]
+description = "Type-check backend sources"
+dir = "backend"
+depends = ["install:backend"]
+run = "uv run ty check"
+
+[tasks.typecheck]
+description = "Type-check all sources"
+depends = ["typecheck:frontend", "typecheck:backend"]
+
+[tasks."test:contract"]
+description = "Test repository template contract"
+run = "uv run --python 3.14 python -m unittest tests/test_template.py -v"
+
+[tasks."test:frontend"]
+description = "Test frontend sources"
+dir = "frontend"
+depends = ["install:frontend"]
+run = "aube run test"
+
+[tasks."test:backend"]
+description = "Test backend sources"
+dir = "backend"
+depends = ["install:backend"]
+run = "uv run karva test tests/"
+
+[tasks.test]
+description = "Run all tests"
+depends = ["test:contract", "test:frontend", "test:backend"]
+
+[tasks."build:frontend"]
+description = "Build frontend production assets"
+dir = "frontend"
+depends = ["install:frontend"]
+run = "aube run build"
+
+[tasks.build]
+description = "Build production artifacts"
+depends = ["build:frontend"]
+
+[tasks.ci]
+description = "Run complete CI validation"
+depends = ["format:check", "lint", "typecheck", "test", "build"]

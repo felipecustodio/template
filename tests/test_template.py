@@ -32,7 +32,7 @@ class TemplateContractTests(unittest.TestCase):
         files = {
             "frontend/package.json": ("vite", "typescript", "zod", "@biomejs/biome"),
             "backend/pyproject.toml": ("robyn", "pydantic", "karva"),
-            "mise.toml": ("aube", "uv", "hk", "mise run ci"),
+            "mise.toml": ("aube", "uv", "hk", "[tasks.ci]"),
             "hk.pkl": ("pre-commit", "pre-push", "mise"),
             ".github/workflows/ci.yml": ("jdx/mise-action", "mise run ci"),
         }
@@ -42,6 +42,28 @@ class TemplateContractTests(unittest.TestCase):
                 content = (ROOT / relative_path).read_text()
                 for term in terms:
                     self.assertIn(term, content)
+
+    def test_mise_exposes_complete_task_surface(self) -> None:
+        content = (ROOT / "mise.toml").read_text()
+
+        for task in ("install", "dev", "format", "lint", "typecheck", "test", "build", "ci"):
+            self.assertIn(f"[tasks.{task}]", content)
+
+    def test_ci_uses_locked_mise_toolchain(self) -> None:
+        content = (ROOT / ".github/workflows/ci.yml").read_text()
+
+        for term in (
+            "push:",
+            "pull_request:",
+            "permissions:",
+            "concurrency:",
+            "cancel-in-progress: true",
+            "actions/checkout@v6",
+            "jdx/mise-action@v4",
+            "version: 2026.6.10",
+            "mise run ci",
+        ):
+            self.assertIn(term, content)
 
 
 if __name__ == "__main__":

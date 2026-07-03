@@ -1,0 +1,33 @@
+amends "package://github.com/jdx/hk/releases/download/v1.49.0/hk@1.49.0#/Config.pkl"
+
+local preCommit = new Mapping<String, Step> {
+  ["frontend"] {
+    glob = List("frontend/**/*.{css,html,json,js,ts}")
+    check = "mise run format:check ::: lint:frontend ::: typecheck:frontend"
+  }
+  ["contract"] {
+    glob = List(".github/**/*.yml", "backend/**", "frontend/**", "hk.pkl", "mise.toml", "README.md", "tests/**")
+    check = "mise run test:contract"
+  }
+}
+
+local prePush = new Mapping<String, Step> {
+  ["typecheck"] {
+    check = "mise run typecheck"
+  }
+  ["test"] {
+    check = "mise run test"
+  }
+}
+
+hooks {
+  ["pre-commit"] {
+    steps = preCommit
+  }
+  ["pre-push"] {
+    steps = prePush
+  }
+  ["check"] {
+    steps = preCommit
+  }
+}
