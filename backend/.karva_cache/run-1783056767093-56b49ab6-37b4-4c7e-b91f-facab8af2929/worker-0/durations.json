@@ -1,0 +1,14 @@
+{
+  "tests.test_health::test_health_response_rejects_unknown_status": {
+    "secs": 0,
+    "nanos": 166667
+  },
+  "tests.test_health::test_health_returns_validated_payload": {
+    "secs": 0,
+    "nanos": 196834
+  },
+  "tests.test_health::test_health_response_serializes": {
+    "secs": 0,
+    "nanos": 329833
+  }
+}
